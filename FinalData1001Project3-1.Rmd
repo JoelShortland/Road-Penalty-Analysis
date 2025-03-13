@@ -1,0 +1,199 @@
+---
+title: "Penalties over Time Report"
+author: "500497135"
+subtitle: "Project 3"
+date: "University of Sydney | DATA1001 | May 2021"
+output:
+  html_document:
+    fig_caption: yes
+    number_sections: yes
+    self_contained: yes
+    theme: flatly
+    toc: true
+    toc_depth: 3
+    toc_float: true
+    code_folding: hide
+---
+
+<br>
+
+# Recommendaton
+This recommendation is addressed to the NSW Minister of Transport: I recommend an investigation be done into the sudden increase in 'point to point' penalties handed out between 2015 and 2017. It is possible an issue with average speed cameras has arisen, and given the fact there are currently plans to build more this year, I believe it would be wise to ensure there is no issue with the error rate of the cameras themselves. As such this investigation should focus on uncovering what external factors could have lead to this increase in penalties. If none are found, then there is likely an issue with the cameras themselves and they should be thoroughly retested. 
+
+<br>
+
+# Evidence
+For my investigation, I wished to look at the number of penalties being handed out each year for individual offenses. By doing so I hoped to find any irregularities and make a recommendation depending on my findings.
+\n
+My findings are as follows:
+```{r, message=FALSE}
+#Download libraries
+library(tidyverse)
+library(ggplot2)
+library(dplyr)
+
+# Read in the data
+## Option 2: Penalty Notices in Australia
+penalties = read.csv("http://www.maths.usyd.edu.au/u/UG/JM/DATA1001/r/current/projects/2020data/penalities.csv")
+
+####################################################################################
+## First get our data from the csv file (Number of each offense type)
+####################################################################################
+#Get speed offenses
+s1 <- penalties %>%                         #For set 1 of our data (s1), we look in penalties
+  count(OFFENCE_FINYEAR, SPEED_IND) %>%     #We get the number of Speed penalties in each year group
+  filter(SPEED_IND=="Y")                    #And filter for speed penalties
+                                            #And repeat for our other sets
+#Get point to point offenses                
+s2 <- penalties %>%
+  count(OFFENCE_FINYEAR, POINT_TO_POINT_IND) %>%
+  filter(POINT_TO_POINT_IND=="Y")
+
+#Get red light offenses
+s3 <- penalties %>%
+  count(OFFENCE_FINYEAR, RED_LIGHT_CAMERA_IND) %>%
+  filter(RED_LIGHT_CAMERA_IND=="Y")
+
+#Get speed camera offenses
+s4 <- penalties %>%
+  count(OFFENCE_FINYEAR, SPEED_CAMERA_IND) %>%
+  filter(SPEED_CAMERA_IND=="Y")
+
+#Get seat belt offenses
+s5 <- penalties %>%
+  count(OFFENCE_FINYEAR, SEATBELT_IND) %>%
+  filter(SEATBELT_IND=="Y")
+
+#Get mobile phone offenses
+s6 <- penalties %>%
+  count(OFFENCE_FINYEAR, MOBILE_PHONE_IND) %>%
+  filter(MOBILE_PHONE_IND=="Y")
+
+#Get parking offenses
+s7 <- penalties %>%
+  count(OFFENCE_FINYEAR, PARKING_IND) %>%
+  filter(PARKING_IND=="Y")
+
+#Get CINS offenses
+s8 <- penalties %>%
+  count(OFFENCE_FINYEAR, CINS_IND) %>%
+  filter(CINS_IND=="Y")
+
+#Get Food offenses
+s9 <- penalties %>%
+  count(OFFENCE_FINYEAR, FOOD_IND) %>%
+  filter(FOOD_IND=="Y")
+
+#Get Bike Toy Etc offenses
+s10 <- penalties %>%
+  count(OFFENCE_FINYEAR, BICYCLE_TOY_ETC_IND) %>%
+  filter(BICYCLE_TOY_ETC_IND=="Y")
+
+####################################################################################
+## Now we have all our data, so create our graphs
+####################################################################################
+#Display graph of speed penalties
+ggplot(s1, aes(y=n, x=OFFENCE_FINYEAR)) +      #First get our data, display number of fines on the y axis and year on x axis
+  geom_bar(stat = "identity") +                #Display the bars (Formatting thing)
+  xlab("Year") +                               #Label our x axis
+  ylab("Number of Penalties") +                #Label our Y axis
+  ggtitle("Speed Penalties Per Year") +        #Give the graph a title  
+  geom_boxplot()                               #And print the graph as a boxplot
+                                               #(Now repeat for the other 9 offences)
+#Display graph of point to point penalties
+ggplot(s2, aes(y=n, x=OFFENCE_FINYEAR)) +
+  geom_bar(stat = "identity") +
+  xlab("Year") +
+  ylab("Number of Penalties") +
+  ggtitle("Point to Point Penalties Per Year") +
+  geom_boxplot()
+
+#Display graph of red light penalties
+ggplot(s3, aes(y=n, x=OFFENCE_FINYEAR)) +
+  geom_bar(stat = "identity") +
+  xlab("Year") +
+  ylab("Number of Penalties") +
+  ggtitle("Red Light Camera Penalties Per Year") +
+  geom_boxplot()
+
+#Display graph of speed camera penalties
+ggplot(s4, aes(y=n, x=OFFENCE_FINYEAR)) +
+  geom_bar(stat = "identity") +
+  xlab("Year") +
+  ylab("Number of Penalties") +
+  ggtitle("Speed Camera Penalties Per Year") +
+  geom_boxplot()
+
+#Display graph of mobile penalties
+ggplot(s5, aes(y=n, x=OFFENCE_FINYEAR)) +
+  geom_bar(stat = "identity") +
+  xlab("Year") +
+  ylab("Number of Penalties") +
+  ggtitle("Seatbelt Penalties Per Year") +
+  geom_boxplot()
+
+#Display graph of seat belt penalties
+ggplot(s6, aes(y=n, x=OFFENCE_FINYEAR)) +
+  geom_bar(stat = "identity") +
+  xlab("Year") +
+  ylab("Number of Penalties") +
+  ggtitle("Mobile Phone Penalties Per Year") +
+  geom_boxplot()
+
+#Display graph of mobile phone penalties
+ggplot(s7, aes(y=n, x=OFFENCE_FINYEAR)) +
+  geom_bar(stat = "identity") +
+  xlab("Year") +
+  ylab("Number of Penalties") +
+  ggtitle("Parking Penalties Per Year") +
+  geom_boxplot()
+
+#Display graph of CINS penalties
+ggplot(s8, aes(y=n, x=OFFENCE_FINYEAR)) +
+  geom_bar(stat = "identity") +
+  xlab("Year") +
+  ylab("Number of Penalties") +
+  ggtitle("CINS Penalties Per Year") +
+  geom_boxplot()
+
+#Display graph of Food penalties
+ggplot(s9, aes(y=n, x=OFFENCE_FINYEAR)) +
+  geom_bar(stat = "identity") +
+  xlab("Year") +
+  ylab("Number of Penalties") +
+  ggtitle("Food Penalties Per Year") +
+  geom_boxplot()
+
+#Display graph of Bike Toy etc penalties
+ggplot(s10, aes(y=n, x=OFFENCE_FINYEAR)) +
+  geom_bar(stat = "identity") +
+  xlab("Year") +
+  ylab("Number of Penalties") +
+  ggtitle("Bicycle Toy etc. Penalties Per Year") +
+  geom_boxplot()
+
+
+```
+
+So, while for most offenses the number of penalties handed out each year changes at an acceptable rate, I found that the number of point to point penalties increased at an abnormal rate between the 2015-2016 and 2016-2017 year groups. 
+
+
+<br>
+
+# Other Evidence 
+Definition for reader: Point to Point offensives are those picked up by 'average speed cameras' These make note of the time a vehicle was in two places, then determines the speed via how long it took to get from point A to point B. Currently, these are only used on heavy vehicles such as buses and trucks.
+
+
+So, what could be the cause of this massive spike in penalties? Looking at the publicly available information on average speed cameras, I could find no mention of any new cameras being installed in the 2015-2017 year range at all. So, these penalties increased seven-fold, for an unknown reason.
+ 
+ 
+Now, these types of cameras are a relatively new technology (at least compared to the more classical speed camera), and there are plans to build more in the year 2021. I believe that this is a bad idea if we remain unaware of what has caused this increase in penalties. If there was a road closure and thus more heavy vehicles along the roads with these cameras, there would be no issue with the technology. However, it is also possible that an undocumented issue with the cameras themselves has arisen. The information to determine this is either not readily available to the public, or it does not exist as all. This is an issue, as this technology is seeing increases in usage both in NSW and all across the world.  
+ 
+ 
+This leads me to my recommendation, which I have made under the 'Recommendation' heading. I have decided to make my client the NSW Minister for transport, as he is responsible for any road related projects in the state. Although, my recommendation would likely go to the office of the minister, rather than the minister himself.
+
+
+# References
+1. 2017 review - Speed cameras - Driving too fast - NSW Centre for Road Safety. Roadsafety.transport.nsw.gov.au. (2021). Retrieved 28 May 2021, from https://roadsafety.transport.nsw.gov.au/speeding/speedcameras/2017-review.html.
+2. Average speed camera FAQs - Speed cameras - Driving too fast - NSW Centre for Road Safety. Roadsafety.transport.nsw.gov.au. (2021). Retrieved 28 May 2021, from https://roadsafety.transport.nsw.gov.au/speeding/speedcameras/average-speed-cameras.html#faq1.
+3. Minister for Transport and Roads. NSW Government. (2021). Retrieved 28 May 2021, from https://www.nsw.gov.au/nsw-government/ministers/minister-for-transport-and-roads#:~:text=Andrew%20Constance&text=You%20can%20send%20the%20Minister,may%20help%20with%20your%20enquiry. 
